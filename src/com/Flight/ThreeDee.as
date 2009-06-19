@@ -55,17 +55,17 @@ package com.Flight
 		private var tempPlane:Plane;
 		private var deadZone:Sprite;
 		
-		[Embed (source="assets/images/hot_nebula_0.jpg")]
+		[Embed (source="../assets/images/hot_nebula_0.jpg")]
 		private var BitmapFront : Class; 
-		[Embed (source="assets/images/hot_nebula_270.jpg")]
+		[Embed (source="../assets/images/hot_nebula_270.jpg")]
 		private var BitmapRight : Class; 
-		[Embed (source="assets/images/hot_nebula_180.jpg")]
+		[Embed (source="../assets/images/hot_nebula_180.jpg")]
 		private var BitmapBack : Class; 
-		[Embed (source="assets/images/hot_nebula_90.jpg")]
+		[Embed (source="../assets/images/hot_nebula_90.jpg")]
 		private var BitmapLeft : Class; 
-		[Embed (source="assets/images/hot_nebula_bottom.jpg")]
+		[Embed (source="../assets/images/hot_nebula_bottom.jpg")]
 		private var BitmapDown : Class; 
-		[Embed (source="assets/images/hot_nebula_top.jpg")]
+		[Embed (source="../assets/images/hot_nebula_top.jpg")]
 		private var BitmapUp : Class; 
 		
 		private var skybox:Cube;
@@ -84,7 +84,7 @@ package com.Flight
 		private var starfieldHeight:int;
 		private var starfieldDepth:int;
 		
-		[Embed (source="assets/models/textures/xwingskin.jpg")]
+		[Embed (source="../assets/models/textures/xwingskin.jpg")]
 		private var XWingSkin:Class;
 		private var xWingMaterial:BitmapMaterial;
 		

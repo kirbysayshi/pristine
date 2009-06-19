@@ -151,7 +151,7 @@ package com.Flight
 		{
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, prepShipData);
-			loader.load( new URLRequest("assets/shipdata/" + file));
+			loader.load( new URLRequest("../assets/shipdata/" + file));
 		}
 		private function prepShipData(e:Event):void
 		{
