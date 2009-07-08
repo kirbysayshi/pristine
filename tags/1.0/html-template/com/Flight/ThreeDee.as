@@ -532,7 +532,7 @@ package com.Flight
 				//p.localRotationY = ship.localRotationY;
 				//p.localRotationZ = ship.localRotationZ;
 				//p.copyPosition(ship.shipGlideCopy);
-				p.saveVectorSnapshot(ship, ship.currentVelocity);
+				//p.saveVectorSnapshot(ship, ship.currentVelocity);
 				
 				//p.pitch(90);
 				//p.x += fPos.x;
@@ -543,7 +543,10 @@ package com.Flight
 				
 				//p.moveLeft(fPos.x);
 				//p.moveBackward(fPos.y);
-				p.position = Number3D.add(ship.position, fPos);
+				//p.position = Number3D.add(ship.position, fPos);
+				p.moveRight(fPos.x);
+				p.moveUp(fPos.z);
+				p.moveForward(fPos.y);
 				//p.moveUp(ship.sLength * 10);
 				//p.moveUp(ship.sLength / 2);
 				

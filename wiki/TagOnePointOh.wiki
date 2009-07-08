@@ -4,7 +4,7 @@
 = 1.0: Dang... time to start over =
 I started implementing this idea while learning Papervision3D (as well as 3D programming techniques in general...), and thus, while 1.0 is sort of feature rich, it's not viable to expand from here without a total rewrite. However, for those (if there are any) that want to just play around with something, it's a good way to do so.
 
-Tag 1.0 is a Flex Builder 3 project, so your best bet is to just import it there, and hit run. If you just try running the swf, you're going to get permissions errors, as it needs to load up assets from neighboring folders (like ship data, movie clip assets, etc).
+Tag 1.0 is a Flex Builder 4 (Gumbo) project, so your best bet is to just import it there, and hit run. If you just try running the swf, you're going to get permissions errors, as it needs to load up assets from neighboring folders (like ship data, movie clip assets, etc).
 
 If you just want to play it, try opening up the Flight.html file. I can't guarantee you won't get sandbox permission errors, but it's worth a shot. Eventually, I'll host this somewhere, just so people can see it without having to download it.
 
