@@ -19,7 +19,7 @@
 	</physical>
 	<engine>
 		<topspeed value="100" />
-		<maxthrust value="52.4" />
+		<maxthrust value="5" />
 		<maxaclthrust value="0.2" />
 	</engine>
 	<handling>

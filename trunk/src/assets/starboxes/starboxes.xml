@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<starboxes>
+	<starbox folder="hotnebula" displayname="Hot Nebula">
+		<front src="hot_nebula_0.jpg" />
+		<left src="hot_nebula_90.jpg" />
+		<back src="hot_nebula_180.jpg" />
+		<top src="hot_nebula_top.jpg" />
+		<right src="hot_nebula_270.jpg" />
+		<bottom src="hot_nebula_bottom.jpg" />
+	</starbox>
+</starboxes>

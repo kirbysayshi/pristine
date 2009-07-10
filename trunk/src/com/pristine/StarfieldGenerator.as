@@ -72,81 +72,22 @@ package com.pristine
 		public function checkFields(shipRef:Ship):void
 		{
 			_positionCounter += Math.abs(shipRef.velocity.x) + Math.abs(shipRef.velocity.y) + Math.abs(shipRef.velocity.z);
-			if(_positionCounter > _drawDistance)
+			if(_positionCounter > shipRef.velocityMagnitude*18)
 			{
 				trace(_positionCounter);
 				_positionCounter = 0;
 				
-				
 				_fields[_currentField].copyTransform(shipRef);
-				//_fields[_currentField].copyPosition(shipRef);
 				
-				/*var forwardAxis:Number3D = shipRef.velocity;
-				Matrix3D.rotateAxis(shipRef.transform, forwardAxis);*/
-				_fields[_currentField].x +=  shipRef.velocity.x * 60;
-				_fields[_currentField].y +=  shipRef.velocity.y * 60;
-				_fields[_currentField].z +=  shipRef.velocity.z * 60;
-				
-				//
-				
-				
-				
-				//_fields[_currentField].moveForward(_drawDistance * 2);
+				_fields[_currentField].x +=  shipRef.velocity.x * 30;
+				_fields[_currentField].y +=  shipRef.velocity.y * 30;
+				_fields[_currentField].z +=  shipRef.velocity.z * 30;
+
 				_currentField++;
 				if(_currentField >= _fields.length)
 					_currentField = 0;
 			}
 			
-			//trace(shipPos);
-			/*var dx:Number = shipPos.x - _lastSwapPos.x;
-			var dy:Number = shipPos.y - _lastSwapPos.y;
-			var dz:Number = shipPos.z - _lastSwapPos.z;*/
-			
-			/*if(_lastSwap.position == _fields[0].position)
-			{
-				// field swap
-				_fields[0].copyTransform(shipRef);
-				var forwardAxis:Number3D = new Number3D(0, 0, 1);
-				Matrix3D.rotateAxis(shipRef.transform, forwardAxis);
-				_fields[0].x += shipRef.velocity.x * forwardAxis.x * 4;
-				_fields[0].y += shipRef.velocity.y * forwardAxis.y * 4;
-				_fields[0].z += shipRef.velocity.z * forwardAxis.z * 4;
-				_lastSwap = _fields[_fields.push(_fields.shift()) - 1];
-			}*/
-			
-			/*var dx:Number = shipRef.x - _lastSwapPos.x;
-			var dy:Number = shipRef.y - _lastSwapPos.y;
-			var dz:Number = shipRef.z - _lastSwapPos.z;
-			
-			
-			trace("draw: " + _drawDistance + " distance: " + Math.sqrt(dx*dx + dy*dy + dz*dz));
-			
-			if ( Math.sqrt( dx*dx + dy*dy + dz*dz ) > _depth * _deleteDistance)
-			{
-				trace('field swap');
-				_fields[_currentField].copyTransform(shipRef);
-				_fields[_currentField].moveForward(_drawDistance);
-				_lastSwapPos.copyFrom(_fields[_currentField].position);
-				_currentField++;
-				if(_currentField >= _fields.length)
-					_currentField = 0;
-			}
-				//var forwardAxis:Number3D = new Number3D(0, 0, 1);
-				//Matrix3D.rotateAxis(shipRef.transform, forwardAxis);
-				/*_fields[_currentField].x += shipRef.velocity.x * forwardAxis.x ;
-				_fields[_currentField].y += shipRef.velocity.y * forwardAxis.y * 4;
-				_fields[_currentField].z += shipRef.velocity.z * forwardAxis.z * 4;*/
-				
-				/*_fields[_currentField].x = (shipRef.velocity.x*30) + shipRef.x;
-				_fields[_currentField].y = (shipRef.velocity.y*30) + shipRef.y;
-				_fields[_currentField].z = (shipRef.velocity.z*30) + shipRef.z;
-				//_fields[_currentField].moveForward(_drawDistance);
-				_lastSwapPos.copyFrom(_fields[_currentField].position);
-				trace(_lastSwapPos);
-				_currentField++;
-				if(_currentField >= _fields.length)
-					_currentField = 0;
-			}*/
 		}
 	}
 }
