@@ -1,8 +1,12 @@
 package
 {
+	import br.com.stimuli.loading.BulkLoader;
+	
 	import com.bigroom.input.KeyPoll;
 	import com.pristine.Player;
+	import com.pristine.SpaceDebrisGenerator;
 	import com.pristine.StarfieldGenerator;
+	import com.pristine.starbox.Starbox;
 	
 	import flash.events.*;
 	
@@ -29,6 +33,7 @@ package
 		private var _worldFriction:Number;
 		
 		private var _starfields:StarfieldGenerator;
+		private var _spacedebris:SpaceDebrisGenerator;
 		
 		private var _springCamera:SpringCamera3D;
 		private var _cam:Camera3D;
@@ -37,10 +42,18 @@ package
 		
 		private var _floorHP:Number;
 		
+		private var _masterLoader:BulkLoader;
+		
+		private var _starbox:Starbox;
+		
 		public function Pristine()
 		{
-			super(stage.stageWidth, stage.stageHeight, true, false, CameraType.SPRING);
+			super(stage.stageWidth, stage.stageHeight, true, false, CameraType.FREE);
 			viewport.containerSprite.sortMode = ViewportLayerSortMode.INDEX_SORT;
+			
+			_masterLoader = new BulkLoader('master');
+			
+			_starbox = new Starbox(scene);
 			
 			_keys = new KeyPoll(stage);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
@@ -54,7 +67,8 @@ package
 			
 			setCamera();
 			createPlayer();
-			createStarfields();
+			//createStarfields();
+			_spacedebris = new SpaceDebrisGenerator(scene, 100, 600, 2);
 			createTempStation();
 			//createFloor();
 			//createTargets();
@@ -71,7 +85,9 @@ package
 		private function setCamera():void
 		{
 			_cam = new Camera3D();
-			
+			_cam.fov = 120;
+			_cam.focus = 50;
+			_cam.zoom = 12;
 			/*_springCamera = new SpringCamera3D();
 			_springCamera.mass = 50;
             _springCamera.damping = 15;
@@ -87,6 +103,7 @@ package
 		private function createStarfields():void
 		{
 			_starfields = new StarfieldGenerator(scene, _player.getShip().position);
+			
 		}
 		private function createFloor():void
         {
@@ -157,7 +174,23 @@ package
          	if(_keys.isDown(KeyPoll.MINUS))
          	{
          		_player.getShip().decreaseThrottle();
-         	} 
+         	}
+         	if(_keys.isDown(KeyPoll.RIGHTBRACKET))
+         	{
+         		_cam.focus += 1;
+         		trace(_cam.focus);
+         	}
+         	if(_keys.isDown(KeyPoll.LEFTBRACKET))
+         	{
+         		_cam.focus -= 1;
+         		trace(_cam.focus);
+         	}
+         	 
+         	if(_keys.isDown(KeyPoll.V))
+         	{
+         		trace(_player.getShip().velocityMagnitude);
+         	}
+         	 
          	if(_keys.isDown(KeyPoll.SPACE))
          	{
          		_player.getShip().startGliding();
@@ -166,6 +199,7 @@ package
          	{
          		_player.getShip().stopGliding();
          	}
+         	
         }
         private function clickHandler(e:MouseEvent):void
         {
@@ -183,10 +217,13 @@ package
 		override protected function onRenderTick(event:Event = null):void
         {
         	checkKeys();
-        	_starfields.checkFields(_player.getShip());
+        	//_starfields.checkFields(_player.getShip());
+        	
+        	_spacedebris.renderDebris(_player.getShip().getVelocityFutureStep(15), _player.getShip().position, _player.getShip().velocityMagnitude, _player.getShip().speedLimit);
+        	
         	_player.getShip().updateMainWeapons(_collisionList);
-        	_player.getShip().calculateVelocity();
-        	_player.getShip().move(_worldFriction);
+        	_player.getShip().calculateVelocity(_worldFriction);
+        	_player.getShip().move();
         	
         	_cam.copyTransform(_player.getShip());
         	//_cam.moveBackward(1000);

@@ -14,7 +14,7 @@ package com.pristine
 
 	public class Ship extends DisplayObject3D
 	{
-		[Embed(source='assets/shipdata/x-wing.xml',mimeType="application/octet-stream")]
+		[Embed(source='assets/shipdata/vipermii.xml',mimeType="application/octet-stream")]
 		protected var ViperData:Class;
 		
 		private var _thrustPool:Number;
@@ -36,11 +36,15 @@ package com.pristine
 		private var _sceneHolder:Scene3D;
 		
 		private var _isGliding:Boolean;
+		private var _speedRestricted:Boolean;
 		
 		private var _throttleLevel:Number;
 		private var _thrustLevel:Number; // how much thrust...
 		private var _prevThrustLevel:Number; // last thrust value before glide
 		private var _velocity:Number3D; // how much per time step the ship should move in all directions
+		private var _velocityMagnitude:Number; // "airspeed"
+		
+		private var _velocityFutureSteps:Vector.<Number3D>;
 		
 		public function Ship(scene:Scene3D)
 		{
@@ -84,9 +88,15 @@ package com.pristine
 			_isFiring = false;
 			
 			_isGliding = false;
+			_speedRestricted = true;
 			_throttleLevel = 0;
 			_thrustLevel = 0;
 			_velocity = new Number3D();
+			_velocityFutureSteps = new Vector.<Number3D>(30);
+			for(var i:int = 0; i < _velocityFutureSteps.length; i++)
+			{
+				_velocityFutureSteps[i] = new Number3D();
+			}
 			
 			var mat:ColorMaterial = new ColorMaterial(0xFFFFFF);
 			var mats:MaterialsList = new MaterialsList();
@@ -126,20 +136,13 @@ package com.pristine
 				return true;
 			}
 		}
-		public function move(friction:Number):void
+		public function move():void
 		{			
 			this.x += _velocity.x;
 			this.y += _velocity.y;
 			this.z += _velocity.z;
-			
-			if(!_isGliding)
-			{
-				_velocity.x *= friction;
-				_velocity.y *= friction;
-				_velocity.z *= friction;
-			}	
 		}
-		public function calculateVelocity():void
+		public function calculateVelocity(friction:Number):void
 		{
 			var forwardAxis:Number3D = new Number3D(0, 0, 1); // forward
 			Matrix3D.rotateAxis(this.transform, forwardAxis);
@@ -147,7 +150,7 @@ package com.pristine
 			_velocity.y += _thrustLevel * forwardAxis.y;
 			_velocity.z += _thrustLevel * forwardAxis.z;
 			
-			if(_velocity.x > _topSpeed)
+			/*if(_velocity.x > _topSpeed)
 				_velocity.x = _topSpeed;
 			if(_velocity.y > _topSpeed)
 				_velocity.y = _topSpeed;
@@ -159,8 +162,34 @@ package com.pristine
 			if(_velocity.y < _topSpeed * -1)
 				_velocity.y = _topSpeed * -1;
 			if(_velocity.z < _topSpeed  * -1)
-				_velocity.z = _topSpeed * -1;
+				_velocity.z = _topSpeed * -1;*/
 			
+			if(!_isGliding)
+			{
+				_velocity.x *= friction;
+				_velocity.y *= friction;
+				_velocity.z *= friction;
+			}	
+			
+			_velocityMagnitude = Math.sqrt( _velocity.x*_velocity.x +
+											_velocity.y*_velocity.y +
+											_velocity.z*_velocity.z);
+			
+			if(_velocityMagnitude > _topSpeed && _speedRestricted)
+			{
+				// reset velocity here?
+			}
+			
+			_velocityFutureSteps[0].x = this.x + _velocity.x;
+			_velocityFutureSteps[0].y = this.y + _velocity.y;
+			_velocityFutureSteps[0].z = this.z + _velocity.z;								
+			
+			for(var i:int = 1; i < _velocityFutureSteps.length; i++)
+			{
+				_velocityFutureSteps[i].x = _velocityFutureSteps[i-1].x + (_velocity.x + _thrustLevel * forwardAxis.x);
+				_velocityFutureSteps[i].y = _velocityFutureSteps[i-1].y + (_velocity.y + _thrustLevel * forwardAxis.y);
+				_velocityFutureSteps[i].z = _velocityFutureSteps[i-1].z + (_velocity.z + _thrustLevel * forwardAxis.z);
+			}
 			//trace(_velocity);
 		}
 		public function increaseThrottle():void
@@ -204,6 +233,18 @@ package com.pristine
 		public function get velocity():Number3D
 		{
 			return new Number3D(_velocity.x, _velocity.y, _velocity.z);
+		}
+		public function get velocityMagnitude():Number
+		{
+			return _velocityMagnitude;
+		}
+		public function get speedLimit():Number
+		{
+			return _topSpeed;
+		}
+		public function getVelocityFutureStep(step:int):Number3D
+		{
+			return _velocityFutureSteps[step];
 		}
 		private function fireSingleShot(e:TimerEvent):void
 		{
