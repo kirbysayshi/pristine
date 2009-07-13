@@ -7,8 +7,11 @@ package
 	import com.pristine.SpaceDebrisGenerator;
 	import com.pristine.StarfieldGenerator;
 	import com.pristine.starbox.Starbox;
+	import com.pristine.starbox.StarboxEvent;
 	
+	import flash.display.StageDisplayState;
 	import flash.events.*;
+	import flash.utils.*;
 	
 	import org.ascollada.utils.FPS;
 	import org.papervision3d.cameras.Camera3D;
@@ -46,14 +49,17 @@ package
 		
 		private var _starbox:Starbox;
 		
+		private var _stuffToLoad:Dictionary;
+		
 		public function Pristine()
 		{
 			super(stage.stageWidth, stage.stageHeight, true, false, CameraType.FREE);
+			
+			_stuffToLoad = new Dictionary();
+			
 			viewport.containerSprite.sortMode = ViewportLayerSortMode.INDEX_SORT;
 			
 			_masterLoader = new BulkLoader('master');
-			
-			_starbox = new Starbox(scene);
 			
 			_keys = new KeyPoll(stage);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
@@ -62,21 +68,37 @@ package
 			var fps:FPS = new FPS();
 			this.addChild(fps);
 			
-			_worldFriction = 0.95;
+			_worldFriction = 1; // if we were underwater or something, this would be smaller
 			_collisionList = new Array();
 			
 			setCamera();
 			createPlayer();
 			//createStarfields();
-			_spacedebris = new SpaceDebrisGenerator(scene, 100, 600, 2);
+			_spacedebris = new SpaceDebrisGenerator(scene, 100, 600, 1);
 			createTempStation();
 			//createFloor();
-			//createTargets();
-			startRendering();
+			createTargets();
+			_starbox = new Starbox(scene);
+			_stuffToLoad[_starbox] = false;
+			_starbox.addEventListener(StarboxEvent.LOADED, checkIfLoaded);
 		}
+		private function checkIfLoaded(e:*):void
+        {
+        	_stuffToLoad[e.self] == true;
+        	
+        	var ready:Boolean = true;
+        	for each (var o:* in _stuffToLoad)
+        	{
+        		if( _stuffToLoad[o] == false )
+        			ready = false;
+        	}
+        	
+        	if(ready)
+        		startRendering();
+        }
 		private function createPlayer():void
 		{
-			_player = new Player(scene);
+			_player = new Player(scene, stage);
 			scene.addChild(_player.getShip());
 			//_player.getShip().pitch(90);
 			//_cam.target = _player.getShip();
@@ -200,6 +222,14 @@ package
          		_player.getShip().stopGliding();
          	}
          	
+         	if(_keys.isDown(KeyPoll.V))
+         	{
+         		//_player.getShip().controls.showDeadzone();
+         	}
+         	else
+         	{
+         		//_player.getShip().controls.hideDeadzone();
+         	}
         }
         private function clickHandler(e:MouseEvent):void
         {
@@ -221,10 +251,10 @@ package
         	
         	_spacedebris.renderDebris(_player.getShip().getVelocityFutureStep(15), _player.getShip().position, _player.getShip().velocityMagnitude, _player.getShip().speedLimit);
         	
-        	_player.getShip().updateMainWeapons(_collisionList);
-        	_player.getShip().calculateVelocity(_worldFriction);
-        	_player.getShip().move();
+        	_player.getShip().update(_collisionList, _worldFriction);
         	
+        	//_starbox.syncPosition(_player.getShip());
+        	//_starbox.sendToBack(viewport);
         	_cam.copyTransform(_player.getShip());
         	//_cam.moveBackward(1000);
         	//_cam.moveUp(400);

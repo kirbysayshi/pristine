@@ -56,7 +56,7 @@ package com.pristine
 				var dz :Number = p.z - shipPos.z;
 				var d:Number = Math.sqrt( dx*dx + dy*dy + dz*dz );
 				
-				if(d > shipVelMag*18 && shipVelMag > 30) // this should be topspeed * 10
+				if(d > shipVelMag*18 && shipVelMag > 20) // this should be topspeed * 10
 				{
 					p.x = shipFutureVel.x + Math.random()*_width - Math.random()*_width;
 					p.y = shipFutureVel.y + Math.random()*_width - Math.random()*_width;
