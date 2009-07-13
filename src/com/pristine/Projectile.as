@@ -22,11 +22,14 @@ package com.pristine
 		
 		private var _isBeingShot:Boolean;
 		
+		private var _lastPos:Number3D;
+		
 		public function Projectile(type:String="bullet")
 		{
 			_type = type;
 			_originPoint = new Number3D();
 			_shipVelocity = new Number3D();
+			_lastPos = new Number3D();
 			_isBeingShot = false;
 			
 			if ( _type == "bullet" )
@@ -40,7 +43,7 @@ package com.pristine
 			}
 			else if ( _type == "blaster" )
 			{
-				_mat = new ColorMaterial(0xFFF000);
+				_mat = new ColorMaterial(0xFF0000);
 				_radius = 2;
 				_length = 1000;
 				_topRadius = 5;
@@ -55,11 +58,19 @@ package com.pristine
 		{
 			this.copyTransform(orientation);
 			_shipVelocity.copyFrom(shipVel);
-
+			_lastPos.copyFrom(_originPoint);
 			moveRight(offset.x);
 			moveUp(offset.y);
 			moveForward(offset.z);
 			_isBeingShot = true;
+		}
+		public function set lastPosition(pos:Number3D):void
+		{
+			_lastPos.copyFrom(pos);
+		}
+		public function get lastPosition():Number3D
+		{
+			return _lastPos;
 		}
 		public function set originPoint(origin:Number3D):void
 		{

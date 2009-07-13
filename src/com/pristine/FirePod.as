@@ -2,9 +2,12 @@ package com.pristine
 {
 	import flash.events.TimerEvent;
 	
+	import org.papervision3d.core.math.Number3D;
+	import org.papervision3d.core.math.Plane3D;
 	import org.papervision3d.materials.ColorMaterial;
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cylinder;
+	import org.papervision3d.objects.primitives.Sphere;
 	import org.papervision3d.scenes.Scene3D;
 
 	public class FirePod extends DisplayObject3D
@@ -70,6 +73,9 @@ package com.pristine
 		}
 		public function updateProjectilePositions(collisionList:Array):void
 		{
+			var plane:Plane3D = new Plane3D();
+			var inter:Number3D = new Number3D();
+			
 			for each( var p:Projectile in _mainWeaponRounds)
 			{
 				if(p.activated)
@@ -78,7 +84,17 @@ package com.pristine
 					{
 						var hit:Boolean = false;
 						if(collisionList[i] != null)
-							hit = collisionList[i][0].hitTestObject(p); 
+						{
+							plane.setNormalAndPoint(p.lastPosition, collisionList[i][0].position);
+							inter = plane.getIntersectionLineNumbers(p.lastPosition, p.position);
+							/*var s:Sphere = new Sphere( new ColorMaterial(), 1000 );
+							s.x = inter.x;
+							s.y = inter.y;
+							s.z = inter.z;
+							_sceneHolder.addChild(s);*/
+							//hit = collisionList[i][0].hitTestObject(p);
+							trace("Inter: " + inter + " lastpos: " + p.lastPosition);
+						} 
 						if(hit)
 						{
 							collisionList[i][1]--;
@@ -95,6 +111,7 @@ package com.pristine
 					}
 
 				}
+				p.lastPosition = p.position;
 				p.moveForward(_velocity);
 				p.x += p.velocity.x;
 				p.y += p.velocity.y;

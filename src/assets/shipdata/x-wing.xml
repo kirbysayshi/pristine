@@ -24,7 +24,7 @@
 	</engine>
 	<handling>
 		<drag value="0.95" />
-		<turnrate value="1.2" />
+		<turnrate value="3" />
 	</handling>
 	<armaments>
 		<mainweapon count="4" type="blaster" firerate="250" velocity="700" maxammo="0" power="10">

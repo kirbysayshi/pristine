@@ -1,5 +1,6 @@
 package com.pristine
 {
+	import flash.display.Stage;
 	import flash.events.TimerEvent;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
@@ -7,14 +8,16 @@ package com.pristine
 	import org.papervision3d.core.math.Matrix3D;
 	import org.papervision3d.core.math.Number3D;
 	import org.papervision3d.materials.ColorMaterial;
+	import org.papervision3d.materials.WireframeMaterial;
 	import org.papervision3d.materials.utils.MaterialsList;
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cone;
+	import org.papervision3d.objects.primitives.Plane;
 	import org.papervision3d.scenes.Scene3D;
 
 	public class Ship extends DisplayObject3D
 	{
-		[Embed(source='assets/shipdata/vipermii.xml',mimeType="application/octet-stream")]
+		[Embed(source='assets/shipdata/x-wing.xml',mimeType="application/octet-stream")]
 		protected var ViperData:Class;
 		
 		private var _thrustPool:Number;
@@ -34,6 +37,7 @@ package com.pristine
 		private var _masterFiringTimer:Timer;
 		
 		private var _sceneHolder:Scene3D;
+		private var _stageRef:Stage;
 		
 		private var _isGliding:Boolean;
 		private var _speedRestricted:Boolean;
@@ -46,11 +50,16 @@ package com.pristine
 		
 		private var _velocityFutureSteps:Vector.<Number3D>;
 		
-		public function Ship(scene:Scene3D)
+		private var _controls:FlightControl;
+		
+		private var _tempReticule:Plane;
+		
+		public function Ship(scene:Scene3D, stageRef:Stage)
 		{
 			super();
 			
 			_sceneHolder = scene;
+			_stageRef = stageRef;
 			
 			var ba:ByteArray= (new ViperData()) as ByteArray;
 			var s:String = ba.readUTFBytes(ba.length);
@@ -104,6 +113,9 @@ package com.pristine
 			var body:Cone = new Cone(mat, _height, _length);
 			body.pitch(90);
 			this.addChild(body);
+			
+			_controls = new FlightControl(_stageRef, 10, 10, _turnRate);
+			createTargetingReticule();
 		}
 		public function startGliding():Boolean
 		{
@@ -136,6 +148,18 @@ package com.pristine
 				return true;
 			}
 		}
+		public function update(collisionList:Array, worldFriction:Number):void
+		{
+        	this.yaw(_controls.getYawRate(_throttleLevel));
+        	this.pitch(_controls.getPitchRate(_throttleLevel));
+        	this.roll(_controls.getRollRate(_throttleLevel));
+        	
+        	calculateVelocity(_drag * worldFriction);
+        	move();
+        	updateTargetReticule();
+        	updateMainWeapons(collisionList);
+		}
+		
 		public function move():void
 		{			
 			this.x += _velocity.x;
@@ -252,6 +276,18 @@ package com.pristine
 				_nextPodToFire = 0;
 			_firepods[_nextPodToFire].fire(e);
 			_nextPodToFire++;
+		}
+		private function createTargetingReticule():void
+		{
+			_tempReticule = new Plane( new WireframeMaterial(0x333399), 40, 40, 1, 1);
+			_tempReticule.copyTransform(this);
+			_tempReticule.moveForward(400);
+			_sceneHolder.addChild(_tempReticule);
+		}
+		private function updateTargetReticule():void
+		{
+			_tempReticule.copyTransform(this);
+			_tempReticule.moveForward(500);
 		}
 	}
 }

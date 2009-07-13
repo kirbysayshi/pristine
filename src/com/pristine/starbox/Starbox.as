@@ -3,6 +3,9 @@ package com.pristine.starbox
 	import br.com.stimuli.loading.BulkLoader;
 	import br.com.stimuli.loading.BulkProgressEvent;
 	
+	import com.pristine.Ship;
+	
+	import flash.events.*;
 	import flash.utils.ByteArray;
 	
 	import org.papervision3d.materials.BitmapMaterial;
@@ -10,6 +13,7 @@ package com.pristine.starbox
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cube;
 	import org.papervision3d.scenes.Scene3D;
+	import org.papervision3d.view.Viewport3D;
 
 	public class Starbox extends DisplayObject3D
 	{
@@ -90,6 +94,17 @@ package com.pristine.starbox
 			_loader.add(_url + _list[_starboxname].right);
 			_loader.start();
 		}
+		public function sendToBack(vp:Viewport3D):void
+		{
+			vp.getChildLayer(_box, false).forceDepth = true;
+			vp.getChildLayer(_box, false).layerIndex = 999999;
+		}
+		public function syncPosition(obj:Ship):void
+		{
+			//trace("pos: " + obj.position + " sky: " + _box.position);
+			_box.copyPosition(obj);
+			//trace("pos: " + obj.position + " sky: " + _box.position);
+		}
 		private function onError(e:*):void
 		{		
 			
@@ -127,7 +142,10 @@ package com.pristine.starbox
 			skyBoxMats.addMaterial(_bottom, "bottom"); 
 			
 			_box = new Cube(skyBoxMats, 100000000, 100000000, 100000000, 4, 4, 4); // originally 4
+			//_box = new Cube(skyBoxMats, 512, 512, 512, 4, 4, 4);
 			_sceneRef.addChild(_box);
+			var evt:StarboxEvent = new StarboxEvent(this, StarboxEvent.LOADED);
+			this.dispatchEvent(evt);
 		}
 	}
 }
