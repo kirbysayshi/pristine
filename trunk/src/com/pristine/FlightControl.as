@@ -38,45 +38,6 @@ package com.pristine
 			_deadzoneDisplay.alpha = 0;
             
             _stageRef.addChild(_deadzoneDisplay);
-            // mouse-based pitch
-            /*if ( mouseY < (stage.height / 2) - 10 )
-                    tPitch = ( -(80 / mouseY) > -ship.maxTurnRate)
-                            ? -(80 / mouseY) 
-                            : -ship.maxTurnRate;
-            else if ( mouseY > (stage.height / 2) + 10 ) //&& mouseY < stage.height - 30)
-                    tPitch = (80 / (stage.height - mouseY) < ship.maxTurnRate) 
-                            ? 80 / (stage.height - mouseY) 
-                            : ship.maxTurnRate;
-            
-            tPitch *= (inverted == true) ? -1 : 1; // if inverted is true, multiply by -1
-            
-            // mouse-based yaw
-            if ( mouseX < (stage.width / 2) - 10) //&& mouseY > 30)
-                    tYaw = ( -(80 / mouseX) > -ship.maxTurnRate) 
-                            ? -(80 / mouseX) 
-                            : -ship.maxTurnRate;
-            else if ( mouseX > (stage.width / 2) + 10) //&& mouseY < stage.height - 30)
-                    tYaw = (80 / (stage.width - mouseX) < ship.maxTurnRate )
-                            ? 80 / (stage.width - mouseX) 
-                            : ship.maxTurnRate;
-                    
-            tYaw *= (inverted == true) ? -1 : 1; // if inverted is true, multiply by -1
-            
-            // this makes the normal turn rate = 75% of max, 
-            // and then 100% of max at 30% throttle
-            if ( ship.throttleLevel > 0.31 && ship.throttleLevel < 0.35){
-                    tPitch *= 1;
-                    tYaw *= 1;
-            }
-            else if ( ship.throttleLevel <= 0.28 ){
-                    tPitch *= 0.2;
-                    tYaw *= 0.2;
-            }
-            else{
-                    tPitch *= 0.65;
-                    tYaw *= 0.65;
-            }
-            return {"pitch": tPitch, "yaw": tYaw };*/
 		}
 		public function showDeadzone():void
 		{
@@ -118,14 +79,7 @@ package com.pristine
 					rate = -_shipMaxTurnRate;
 				}
 			}
-			if(throttleLevel < 0.28)
-			{
-				rate *= 0.2;
-			}
-			if(throttleLevel > 0.35)
-			{
-				rate *= 0.65;
-			}
+			rate *= (-2.05 * (throttleLevel - 0.66) * (throttleLevel - 0.66) + 1); 
 			return rate;
 		}
 	}

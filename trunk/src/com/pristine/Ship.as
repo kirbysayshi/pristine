@@ -1,5 +1,7 @@
 package com.pristine
 {
+	import com.pristine.hud.SimpleHUD;
+	
 	import flash.display.Stage;
 	import flash.events.TimerEvent;
 	import flash.utils.ByteArray;
@@ -17,7 +19,7 @@ package com.pristine
 
 	public class Ship extends DisplayObject3D
 	{
-		[Embed(source='assets/shipdata/x-wing.xml',mimeType="application/octet-stream")]
+		[Embed(source='assets/shipdata/a-wing.xml',mimeType="application/octet-stream")]
 		protected var ViperData:Class;
 		
 		private var _thrustPool:Number;
@@ -54,12 +56,15 @@ package com.pristine
 		
 		private var _tempReticule:Plane;
 		
-		public function Ship(scene:Scene3D, stageRef:Stage)
+		private var _hud:SimpleHUD;
+		
+		public function Ship(scene:Scene3D, stageRef:Stage, hud:SimpleHUD)
 		{
 			super();
 			
 			_sceneHolder = scene;
 			_stageRef = stageRef;
+			_hud = hud;
 			
 			var ba:ByteArray= (new ViperData()) as ByteArray;
 			var s:String = ba.readUTFBytes(ba.length);
@@ -99,8 +104,12 @@ package com.pristine
 			_isGliding = false;
 			_speedRestricted = true;
 			_throttleLevel = 0;
+			// update initial throttle level
+			_hud.updateThrottle(Math.round(_throttleLevel * 100));
+			
 			_thrustLevel = 0;
 			_velocity = new Number3D();
+			
 			_velocityFutureSteps = new Vector.<Number3D>(30);
 			for(var i:int = 0; i < _velocityFutureSteps.length; i++)
 			{
@@ -221,14 +230,16 @@ package com.pristine
 			_throttleLevel += 0.01;
 			if(_throttleLevel > 1) _throttleLevel = 1;
 			_thrustLevel = _throttleLevel * _maxThrust;
-			trace(_throttleLevel);
+			_hud.updateThrottle(Math.round(_throttleLevel * 100));
+			//trace(_throttleLevel);
 		}
 		public function decreaseThrottle():void
 		{
 			_throttleLevel -= 0.01;
 			if(_throttleLevel < 0) _throttleLevel = 0;
 			_thrustLevel = _throttleLevel * _maxThrust;
-			trace(_throttleLevel);
+			_hud.updateThrottle(Math.round(_throttleLevel * 100));
+			//trace(_throttleLevel);
 		}
 		public function startFiring():void
 		{

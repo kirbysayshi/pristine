@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<ship name="Incom T-65 X-Wing" short="X-Wing">
+<ship name="RZ-1 A-Wing Interceptor" short="A-Wing">
 	<comments>
 		firerate is ms between shots per cannon
 	    the number of firepods must match the count
@@ -9,33 +9,31 @@
 		-x is left, +x is right, -y is up, +y is down, -z is behind, +z is into the screen
 	</comments>
 	<description>
-		The Incom T-65 X-Wing is the main space superiority fighter of the Rebel Alliance and the New Republic.
+		The Alliance brain trust of General Jan Dodonna and engineer Walex Blissex developed the A-wing starfighter after examining the role of speed in the Battle of Yavin and the sleek fighters developed by the Tamuuz-an. The top-secret result of their experimentation was the A-wing, the fastest vessel of the Galactic Civil War.
 	</description>
 	<physical>
-		<width value="10.35" />
-		<length value="12.5" />
-		<height value="2.85" />
+		<width value="6.48" />
+		<length value="9.6" />
+		<height value="3.11" />
 		<mass value="10" />
 	</physical>
 	<engine>
-		<topspeed value="100" />
-		<maxthrust value="5" />
+		<topspeed value="120" />
+		<maxthrust value="6" />
 		<maxaclthrust value="0.2" />
 	</engine>
 	<handling>
 		<drag value="0.95" />
-		<turnrate value="3" />
+		<turnrate value="3.5" />
 	</handling>
 	<armaments>
-		<mainweapon count="4" type="blaster" firerate="250" velocity="500" maxammo="0" power="10">
-			<firepod visiblename="UpperLeft" x="-6.25" y="-1.425" z="6.8" />
-			<firepod visiblename="LowerRight" x="6.25" y="1.425" z="6.8" />
-			<firepod visiblename="LowerLeft" x="-6.25" y="1.425" z="6.8" />
-			<firepod visiblename="UpperRight" x="6.25" y="-1.425" z="6.8" />
+		<mainweapon count="2" type="blaster" firerate="230" velocity="500" maxammo="0" power="10">
+			<firepod visiblename="Left" x="-3.24" y="0" z="5.76" />
+			<firepod visiblename="Right" x="4.24" y="0" z="5.76" />
 		</mainweapon>
 		<secondaryweapon count="2" type="launcher" maxammo="3">
-			<firepod order="0" visiblename="Left" x="-0.5" y="0.25" z="11.75" />
-			<firepod order="1" visiblename="Right" x="0.5" y="0.25" z="11.75" />
+			<firepod order="0" visiblename="Left" x="-0.5" y="0" z="5.76" />
+			<firepod order="1" visiblename="Right" x="0.5" y="0" z="5.76" />
 		</secondaryweapon>
 		<options>
 			<defaultfiremode value="single" />
