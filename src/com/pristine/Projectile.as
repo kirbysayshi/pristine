@@ -24,12 +24,15 @@ package com.pristine
 		
 		private var _lastPos:Number3D;
 		
+		private var _lastIntersect:Number3D;
+		
 		public function Projectile(type:String="bullet")
 		{
 			_type = type;
 			_originPoint = new Number3D();
 			_shipVelocity = new Number3D();
 			_lastPos = new Number3D();
+			_lastIntersect = new Number3D(); // this is currently unused
 			_isBeingShot = false;
 			
 			if ( _type == "bullet" )
@@ -99,6 +102,14 @@ package com.pristine
 		public function get visibleGeometry():DisplayObject3D
 		{
 			return _visible;
+		}
+		public function set lastIntersect(intersect:Number3D):void
+		{
+			_lastIntersect.copyFrom(intersect);
+		}
+		public function get lastIntersect():Number3D
+		{
+			return _lastIntersect;
 		}
 	}
 }

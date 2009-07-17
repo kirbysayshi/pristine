@@ -9,7 +9,6 @@ package
 	import com.pristine.starbox.Starbox;
 	import com.pristine.starbox.StarboxEvent;
 	
-	import flash.display.StageDisplayState;
 	import flash.events.*;
 	import flash.utils.*;
 	
@@ -21,11 +20,14 @@ package
 	import org.papervision3d.materials.ColorMaterial;
 	import org.papervision3d.materials.WireframeMaterial;
 	import org.papervision3d.materials.utils.MaterialsList;
+	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cube;
 	import org.papervision3d.objects.primitives.Cylinder;
 	import org.papervision3d.objects.primitives.Plane;
 	import org.papervision3d.view.BasicView;
 	import org.papervision3d.view.layer.util.ViewportLayerSortMode;
+
+	// todo: use buddy rich time being as soundtrack
 
 	[SWF(width='800', height='600', backgroundColor='#000000', frameRate='31')]
 	public class Pristine extends BasicView
@@ -50,6 +52,8 @@ package
 		private var _starbox:Starbox;
 		
 		private var _stuffToLoad:Dictionary;
+		
+		private var _stationHolder:DisplayObject3D;
 		
 		public function Pristine()
 		{
@@ -163,6 +167,16 @@ package
 			
 			stationCenter.moveForward(600000);
 			stationSaucer.moveForward(600000);
+			
+			//_stationHolder = new DisplayObject3D();
+			//_stationHolder.addChild(stationCenter);
+			//_stationHolder.addChild(stationSaucer);
+			//_stationHolder.moveForward(600000);
+			
+			_collisionList.push( new Array(stationCenter, 7000) );
+			_collisionList.push( new Array(stationSaucer, 7000) );
+			
+			//scene.addChild(_stationHolder);
 			
 			scene.addChild(stationCenter);
 			scene.addChild(stationSaucer);

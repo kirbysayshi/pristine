@@ -1,5 +1,7 @@
 package com.pristine
 {
+	import com.kirbySaysHi.collisions.PV3DSegmentIntersectDetector;
+	
 	import flash.events.TimerEvent;
 	
 	import org.papervision3d.core.math.Number3D;
@@ -7,7 +9,6 @@ package com.pristine
 	import org.papervision3d.materials.ColorMaterial;
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cylinder;
-	import org.papervision3d.objects.primitives.Sphere;
 	import org.papervision3d.scenes.Scene3D;
 
 	public class FirePod extends DisplayObject3D
@@ -49,7 +50,7 @@ package com.pristine
 			
 			var visible:Cylinder = new Cylinder(new ColorMaterial(0xEEEEEE), 11, 20);
 			visible.pitch(90);
-			this.addChild(visible);
+			//this.addChild(visible);
 			
 			readyRounds();
 		}
@@ -85,6 +86,12 @@ package com.pristine
 						var hit:Boolean = false;
 						if(collisionList[i] != null)
 						{
+							hit = PV3DSegmentIntersectDetector.check(p.lastPosition, p.position, collisionList[i][0].position, collisionList[i][0].geometry.aabb);
+							
+							// TODO: Maybe store the intersect point, and only run the above test if the intersect point hasn't been set yet?
+							
+							//trace(PV3DRayIntersectDetector.lastIntersection);
+							/*inter.reset();
 							plane.setNormalAndPoint(p.lastPosition, collisionList[i][0].position);
 							inter = plane.getIntersectionLineNumbers(p.lastPosition, p.position);
 							/*var s:Sphere = new Sphere( new ColorMaterial(), 1000 );
@@ -93,7 +100,7 @@ package com.pristine
 							s.z = inter.z;
 							_sceneHolder.addChild(s);*/
 							//hit = collisionList[i][0].hitTestObject(p);
-							trace("Inter: " + inter + " lastpos: " + p.lastPosition);
+							//trace("Inter: " + inter + " lastpos: " + p.lastPosition);
 						} 
 						if(hit)
 						{
