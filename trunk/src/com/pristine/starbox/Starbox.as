@@ -9,6 +9,7 @@ package com.pristine.starbox
 	import flash.utils.ByteArray;
 	
 	import org.papervision3d.materials.BitmapMaterial;
+	import org.papervision3d.materials.WireframeMaterial;
 	import org.papervision3d.materials.utils.MaterialsList;
 	import org.papervision3d.objects.DisplayObject3D;
 	import org.papervision3d.objects.primitives.Cube;
@@ -139,9 +140,10 @@ package com.pristine.starbox
 			skyBoxMats.addMaterial(_back, "back"); 
 			skyBoxMats.addMaterial(_top, "top"); 
 			skyBoxMats.addMaterial(_right, "right"); 
-			skyBoxMats.addMaterial(_bottom, "bottom"); 
+			skyBoxMats.addMaterial(_bottom, "bottom");
+			//skyBoxMats.addMaterial(new WireframeMaterial(), 'all'); 
 			
-			_box = new Cube(skyBoxMats, 100000000, 100000000, 100000000, 4, 4, 4); // originally 4
+			_box = new Cube(skyBoxMats, 100000000, 100000000, 100000000, 4,4,4); // originally 4
 			//_box = new Cube(skyBoxMats, 512, 512, 512, 4, 4, 4);
 			_sceneRef.addChild(_box);
 			var evt:StarboxEvent = new StarboxEvent(this, StarboxEvent.LOADED);
