@@ -20,7 +20,13 @@ package com.pristine
 	public class Ship extends DisplayObject3D
 	{
 		[Embed(source='assets/shipdata/a-wing.xml',mimeType="application/octet-stream")]
+		protected var AWingData:Class;
+		
+		[Embed(source='assets/shipdata/vipermii.xml',mimeType="application/octet-stream")]
 		protected var ViperData:Class;
+		
+		[Embed(source='assets/shipdata/x-wing.xml',mimeType="application/octet-stream")]
+		protected var XWingData:Class;
 		
 		private var _thrustPool:Number;
 		private var _height:Number;
@@ -58,7 +64,7 @@ package com.pristine
 		
 		private var _hud:SimpleHUD;
 		
-		public function Ship(scene:Scene3D, stageRef:Stage, hud:SimpleHUD)
+		public function Ship(scene:Scene3D, type:String, stageRef:Stage, hud:SimpleHUD)
 		{
 			super();
 			
@@ -66,7 +72,15 @@ package com.pristine
 			_stageRef = stageRef;
 			_hud = hud;
 			
-			var ba:ByteArray= (new ViperData()) as ByteArray;
+			var ba:ByteArray;
+			
+			if(type == 'awing')
+				ba = (new AWingData()) as ByteArray;
+			else if (type == 'vipermii')
+				ba = (new ViperData()) as ByteArray;
+			else if	(type == 'xwing')
+				ba = (new XWingData()) as ByteArray;
+				
 			var s:String = ba.readUTFBytes(ba.length);
 			var x:XML = new XML(s);
 			_width = x.physical.width.@value * 10;
@@ -290,10 +304,12 @@ package com.pristine
 		}
 		private function createTargetingReticule():void
 		{
+			if(_tempReticule != null)
+				_sceneHolder.removeChild(_tempReticule);
 			_tempReticule = new Plane( new WireframeMaterial(0x333399), 40, 40, 1, 1);
 			_tempReticule.copyTransform(this);
 			_tempReticule.moveForward(400);
-			_sceneHolder.addChild(_tempReticule);
+			//_sceneHolder.addChild(_tempReticule);
 		}
 		private function updateTargetReticule():void
 		{
