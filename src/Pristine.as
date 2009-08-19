@@ -3,7 +3,9 @@ package
 	import br.com.stimuli.loading.BulkLoader;
 	
 	import com.bigroom.input.KeyPoll;
+	import com.kirbySaysHi.input.KeyDelayedToggle;
 	import com.pristine.Player;
+	import com.pristine.Ship;
 	import com.pristine.SpaceDebrisGenerator;
 	import com.pristine.StarfieldGenerator;
 	import com.pristine.starbox.Starbox;
@@ -34,6 +36,8 @@ package
 	{
 		private var _player:Player;
 		private var _keys:KeyPoll;
+		
+		private var _shipToggle:KeyDelayedToggle;
 		
 		private var _worldFriction:Number;
 		
@@ -66,6 +70,7 @@ package
 			_masterLoader = new BulkLoader('master');
 			
 			_keys = new KeyPoll(stage);
+			_shipToggle = new KeyDelayedToggle(1000);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, clickHandler);
 			
@@ -183,7 +188,7 @@ package
         }
         private function checkKeys():void
         {
-        	if(_keys.isDown(KeyPoll.W))
+        	/*if(_keys.isDown(KeyPoll.W))
          	{
          		_player.getShip().pitch(1);
          		//trace("W");
@@ -202,7 +207,7 @@ package
          	{
          		_player.getShip().roll(1);
          		//trace("A");
-         	}
+         	}*/
          	if(_keys.isDown(KeyPoll.EQUAL))
          	{
          		_player.getShip().increaseThrottle();
@@ -234,6 +239,11 @@ package
          	else
          	{
          		_player.getShip().stopGliding();
+         	}
+         	
+         	if(_keys.isDown(KeyPoll.TAB) && _shipToggle.readyToHit())
+         	{
+         		_player.swapShips();
          	}
          	
          	if(_keys.isDown(KeyPoll.V))
